@@ -36,7 +36,8 @@ RUN \
 
 RUN \
   apt-get install -y \
-    autossh && \
+    gcc && \
+    make && \
     bash && \
     openssl && \
   apt-get clean && \
@@ -44,7 +45,15 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/*
+ 
+ADD http://www.harding.motd.ca/autossh/autossh-1.4e.tgz /autossh-1.4e.tgz
 
+RUN tar -xf autossh-1.4e.tgz && \
+    cd autossh-1.4e
+    ./configure
+    make
+    make install
+    
 # add local files
 COPY root/ /
 
