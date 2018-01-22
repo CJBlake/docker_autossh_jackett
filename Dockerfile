@@ -37,14 +37,13 @@ RUN \
 RUN \
   apt-get install -y \
     autossh && \
-	crontab && \
-	bash && \
-	openssl &&\
+    bash && \
+    openssl && \
   apt-get clean && \
   rm -rf \
     /tmp/* \
-	/var/lib/apt/lists/* \
-	/var/tmp/*
+    /var/lib/apt/lists/* \
+    /var/tmp/*
 
 # add local files
 COPY root/ /
