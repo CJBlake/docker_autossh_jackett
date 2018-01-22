@@ -47,7 +47,7 @@ RUN \
  
 ADD http://www.harding.motd.ca/autossh/autossh-1.4e.tgz /autossh-1.4e.tgz
 
-RUN gunzip -c autossh-1.4e.tgz | tar xvf- && \
+RUN gunzip -c autossh-1.4e.tgz | tar xvf - && \
     cd autossh-1.4e && \
     ./configure && \
     make && \
