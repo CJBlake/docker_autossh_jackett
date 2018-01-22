@@ -36,7 +36,6 @@ RUN \
 
 RUN \
   apt-get install -y \
-    gcc && \
     make && \
     bash && \
     openssl && \
