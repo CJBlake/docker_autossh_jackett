@@ -52,7 +52,9 @@ RUN tar -xf autossh-1.4e.tgz && \
     cd autossh-1.4e && \
     ./configure && \
     make && \
-    make install
+    make install && \
+    cd / && \
+    rm -rf \autossh-1.4e
     
 # add local files
 COPY root/ /
