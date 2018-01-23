@@ -16,4 +16,6 @@ EXPOSE 26189
 
 ADD https://github.com/CJBlake/docker_autossh_jackett/blob/master/portforward.sh
 
+RUN CHMOD 770 portforward.sh
+
 CMD    ["/usr/sbin/sshd", "-D"]
