@@ -1,63 +1,19 @@
-FROM lsiobase/mono
+FROM debian:stretch
 
-# set version label
-ARG BUILD_DATE
-ARG VERSION
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="sparklyballs"
+RUN apt-get update && \
+    apt-get -y --no-install-recommends install nano bash openssh-server ca-certificates autossh && \
+    apt-get clean && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
-# environment settings
-ARG DEBIAN_FRONTEND="noninteractive"
-ENV XDG_DATA_HOME="/config" \
-XDG_CONFIG_HOME="/config"
+RUN sed -ri 's/^#PermitRootLogin\s+.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -ri 's/^#Port\s+.*/Port 12136/' /etc/ssh/sshd_config
 
-RUN \
- echo "**** install packages ****" && \
- apt-get update && \
- apt-get install -y \
-	wget && \
- echo "**** install jackett ****" && \
- mkdir -p \
-	/app/Jackett && \
- jack_tag=$(curl -sX GET "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
-	| awk '/tag_name/{print $4;exit}' FS='[""]') && \
- curl -o \
- /tmp/jacket.tar.gz -L \
-	https://github.com/Jackett/Jackett/releases/download/$jack_tag/Jackett.Binaries.Mono.tar.gz && \
- tar xf \
- /tmp/jacket.tar.gz -C \
-	/app/Jackett --strip-components=1 && \
- echo "**** cleanup ****" && \
- apt-get clean && \
- rm -rf \
-	/tmp/* \
-	/var/lib/apt/lists/* \
-	/var/tmp/*
+RUN mkdir -p /var/run/sshd
 
-RUN \
-  apt-get install -y \
-    make && \
-    bash && \
-    openssl && \
-  apt-get clean && \
-  rm -rf \
-    /tmp/* \
-    /var/lib/apt/lists/* \
-    /var/tmp/*
- 
-ADD http://www.harding.motd.ca/autossh/autossh-1.4e.tgz /autossh-1.4e.tgz
+EXPOSE 12136
+EXPOSE 26189
 
-RUN gunzip -c autossh-1.4e.tgz | tar xvf - && \
-    cd autossh-1.4e && \
-    ./configure && \
-    make && \
-    make install && \
-    cd / && \
-    rm -rf \autossh-1.4e
-    
-# add local files
-COPY root/ /
+ADD https://github.com/CJBlake/docker_autossh_jackett/blob/master/portforward.sh
 
-# ports and volumes
-VOLUME /config /downloads
-EXPOSE 9117
+CMD    ["/usr/sbin/sshd", "-D"]
