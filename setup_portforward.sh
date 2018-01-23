@@ -28,4 +28,5 @@ INNERMASTER
 )
 ENDMASTER"
 su "${AUTOSSH_USER}" -c "chmod 770 /config/scripts/portforward.sh" # Make the script executable
+su "${AUTOSSH_USER}" -c "bash /config/scripts/portforward.sh" # Run the script
 
