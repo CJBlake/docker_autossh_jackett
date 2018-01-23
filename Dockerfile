@@ -14,7 +14,7 @@ RUN mkdir -p /var/run/sshd
 EXPOSE 12136
 EXPOSE 26189
 
-ADD https://github.com/CJBlake/docker_autossh_jackett/blob/master/portforward.sh
+ADD https://github.com/CJBlake/docker_autossh_jackett/blob/master/portforward.sh /portforward.sh
 
 RUN CHMOD 770 portforward.sh
 
